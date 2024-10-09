@@ -1,6 +1,6 @@
 export const getAllCharacter = (currentPage: number, searchQuery: string, status: string, species: string) => {
 	const res = fetch(
-		 `https://rickandmortyapi.com/api/character/?page=${currentPage}&name=${searchQuery}&status=${status}&=species=${species}`
+		 `https://rickandmortyapi.com/api/character/?page=${currentPage}&name=${searchQuery}&status=${status}&species=${species}`
 	);
 	return res;
 };

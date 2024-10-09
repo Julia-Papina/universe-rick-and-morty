@@ -1,39 +1,91 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
-// import Image from "next/image";
-const CharacterPage = ({id} : {id: number}) => {
-    const [detailCharacter, setDetailCharacter] = useState([] as unknown as DetailCharacterType);
+import Image from "next/image";
+import Loader from "@/components/loader/loader";
 
-    type DetailCharacterType = {
-        name: string;
-        species: string;
-        image: string;
-    }
+const CharacterPage = ({ id }: { id: number }) => {
+  const [detailCharacter, setDetailCharacter] = useState(
+    [] as unknown as DetailCharacterType
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        const getCharacterId = async (id: number) => {
-          try {
-              const response = await fetch(
-                `https://rickandmortyapi.com/api/character/${id}`
-              );
-              const data = await response.json();
-              setDetailCharacter(data)
-          } catch (err) {
-            alert(err);
-          }
-        };
-        getCharacterId(id);
-      }, []);
+  type DetailCharacterType = {
+    name: string;
+    species: string;
+    image: string;
+    status: string;
+  };
 
-    console.log(detailCharacter)
+  useEffect(() => {
+    const getCharacterId = async (id: number) => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `https://rickandmortyapi.com/api/character/${id}`
+        );
+        const data = await response.json();
+        setDetailCharacter(data);
+        setIsLoading(false);
+      } catch (err) {
+        alert(err);
+      }
+    };
 
-    return (
-        <div className="flex flex-col">
-         <h1 className="font-semibold text-lg">Вселенная Рик и Морти</h1>
-      <p>Имя персонажа {detailCharacter.name}</p>
-       {/* <Image src={detailCharacter.image} alt='изображение персонажа' width={300} height={300}/>  */}
-        </div>
-    )
-}
+    getCharacterId(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  console.log(detailCharacter);
+
+  return (
+    <section className="flex flex-col p-20 gap-5" id="character-detail">
+      <h1 className="font-semibold text-2xl text-amber-950">
+        Вселенная Рик и Морти
+      </h1>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <article>
+          <div className="flex gap-1 items-center mb-10">
+            <h2>Имя персонажа:</h2>
+            <p className="font-semibold text-lg">{detailCharacter.name}</p>
+          </div>
+
+          <Image
+            src={detailCharacter.image}
+            alt="изображение персонажа"
+            width={500}
+            height={500}
+          />
+          <div className="flex gap-1 mt-10 items-center">
+            <h2 className="">Статус жизни: </h2>
+            <p className="font-semibold text-lg">
+              {detailCharacter.status === "Alive"
+                ? "Жив"
+                : detailCharacter.status === "Dead"
+                ? "Мёртв"
+                : "Неизвестно"}
+            </p>
+          </div>
+
+          <div className="flex gap-1 mt-10 items-center">
+            <h2 className="">Раса: </h2>
+            <p className="font-semibold text-lg">
+              {detailCharacter.species === "Human"
+                ? "Человек"
+                : detailCharacter.species === "Alien"
+                ? "Пришелец"
+                : detailCharacter.species === "Humanoid"
+                ? "Гуманоид"
+                : detailCharacter.species === "Animal"
+                ? "Животное"
+                : "Неизвестно"}
+            </p>
+          </div>
+        </article>
+      )}
+    </section>
+  );
+};
 
 export default CharacterPage;

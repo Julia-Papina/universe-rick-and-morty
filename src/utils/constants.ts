@@ -10,7 +10,6 @@ export const statusOptionArray = [
     { value: "human", label: "Человек" },
     { value: "alien", label: "Пришелец" },
     { value: "humanoid", label: "Гуманоид" },
-    { value: "mythological creature", label: "Мифологическое существо" },
     { value: "animal", label: "Животное" },
     { value: "unknown", label: "Неизвестно" },
   ];
