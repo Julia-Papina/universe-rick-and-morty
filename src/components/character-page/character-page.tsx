@@ -54,7 +54,7 @@ const CharacterPage = ({ id }: { id: number }) => {
           </div>
 
           <Image
-            src={detailCharacter.image}
+            src={detailCharacter?.image}
             alt="изображение персонажа"
             width={500}
             height={500}

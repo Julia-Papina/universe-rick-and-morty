@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { debounce } from "lodash";
 import Pagination from "@/components/pagination/pagination";
 //import Loader from "@/components/loader/loader";
 import Link from "next/link";
@@ -10,18 +9,21 @@ import { OptionType } from "./types";
 import { CharacterType } from "./types";
 import { getAllCharacter } from "@/utils/api";
 import { getAllEpisode } from "@/utils/api";
+import { localStorageSearchQuery, localStorageSearchQueryEpisode, localStorageSpecies, localStorageStatus } from "@/utils/constants";
 import Image from "next/image";
 
 export const HomePage = () => {
+
   const pageSize = 19;
   const [character, setCharacter] = useState({} as CharacterType);
   const [episode, setEpisode] = useState({} as CharacterType);
-  // const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState<string>(" ");
+  const [searchQuery, setSearchQuery] = useState(localStorageSearchQuery());
+  const [searchQueryEpisode, setSearchQueryEpisode] = useState(
+    localStorageSearchQueryEpisode()
+  );
   const [currentSettings, setCurrentSettings] = useState(1);
-  const [statusSettings, setStatusSettings] = useState(" ");
-  const [speciesSettings, setSpeciesSettings] = useState(" ");
-  const [searchQueryEpisode, setSearchQueryEpisode] = useState<string>(" ");
+  const [statusSettings, setStatusSettings] = useState(localStorageStatus() || ' ');
+  const [speciesSettings, setSpeciesSettings] = useState(localStorageSpecies() || " ");
 
   const getAllCharacterData = async (
     pageNumber: number,
@@ -35,14 +37,14 @@ export const HomePage = () => {
   };
 
   useEffect(() => {
-    if (searchQuery === " ") {
+    if (searchQuery === null) {
       return;
     } else {
       getAllCharacterData(
         currentSettings,
-        searchQuery,
-        statusSettings,
-        speciesSettings
+        searchQuery as unknown as string,
+        statusSettings as unknown as string,
+        speciesSettings as unknown as string,
       );
     }
   }, [currentSettings, statusSettings, searchQuery, speciesSettings]);
@@ -52,45 +54,48 @@ export const HomePage = () => {
     searchEpisode: string
   ) => {
     const res = await getAllEpisode(pageNumber, searchEpisode);
-    // const character = await res.json();
-    // setCharacter(character);
     const episode = await res.json();
     setEpisode(episode);
   };
 
   useEffect(() => {
-    if (searchQueryEpisode === " ") {
+    if (searchQueryEpisode === null) {
       return;
     } else {
-      getAllEpisodeData(currentSettings, searchQueryEpisode);
+      getAllEpisodeData(
+        currentSettings,
+        searchQueryEpisode as unknown as string
+      );
     }
   }, [currentSettings, searchQueryEpisode]);
 
-  const handleSearchChange = debounce(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(event.target.value);
-      setCharacter({} as CharacterType);
-    },
-    600
-  );
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchQuery(value);
+    localStorage.setItem("queryCharacter", value);
+  };
 
-  const handleSearchChangeEpisode = debounce(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQueryEpisode(event.target.value);
-      setCharacter({} as CharacterType);
-    },
-    600
-  );
+  const handleSearchChangeEpisode = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setSearchQueryEpisode(value);
+    localStorage.setItem("queryEpisode", value);
+  };
 
   const selectStatusHandler = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
-    setStatusSettings(event.target.value);
+    const value = event.target.value;
+    setStatusSettings(value as string);
+    localStorage.setItem("statusFilter", value as string);
   };
   const selectSpeciesHandler = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
-    setSpeciesSettings(event.target.value);
+    const value = event.target.value;
+    setSpeciesSettings(value as string);
+    localStorage.setItem("speciesFilter", value as string);
   };
   //console.log(character);
   return (
@@ -101,6 +106,7 @@ export const HomePage = () => {
           <label htmlFor="name">Имя персонажа</label>
           <input
             type="search"
+            value={searchQuery as string}
             onChange={handleSearchChange}
             id="name"
             aria-label="Имя персонажа"
@@ -113,6 +119,7 @@ export const HomePage = () => {
             <label htmlFor="status-select">Жив?</label>
             <select
               onChange={selectStatusHandler}
+              value={statusSettings as string || ' '}
               name="status"
               id="status-select"
               className="bg-gray-50 border border-gray-300 text-gray-900 outline-none text-sm rounded-lg focus:ring-blue-500 focus:border-slate-700 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -129,12 +136,13 @@ export const HomePage = () => {
 
             <select
               onChange={selectSpeciesHandler}
+              value={speciesSettings as string || ' '}
               name="species"
               id="species-select"
               className="bg-gray-50 border border-gray-300 text-gray-900 outline-none text-sm rounded-lg focus:ring-blue-500 focus:border-slate-700 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               {speciesOptionArray.map((status: OptionType) => (
-                <option value={status.value} key={status.value}>
+                <option value={status.value as string} key={status.value}>
                   {status.label}
                 </option>
               ))}
@@ -145,6 +153,7 @@ export const HomePage = () => {
           <label htmlFor="episode">Эпизод</label>
           <input
             onChange={handleSearchChangeEpisode}
+            value={searchQueryEpisode as string}
             type="search"
             id="episode"
             aria-label="Эпизод"
@@ -164,7 +173,7 @@ export const HomePage = () => {
                   key={item.id}
                   className="flex gap-2 items-center border border-solid border-slate-300 p-2 rounded-md hover:bg-slate-100"
                 >
-                  <Image src={item.image} alt="" width={50} height={50} />
+                  <Image src={item?.image} alt="" width={50} height={50} />
                   {item.name}
                 </Link>
               ))}

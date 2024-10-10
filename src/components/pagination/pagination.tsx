@@ -43,7 +43,7 @@ const Pagination = ({
       <button
         type="button"
         onClick={handleOnPrevious}
-        className="border border-solid border-slate-300 px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 disabled:bg-slate-100"
+        className="border border-solid border-slate-300 px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 disabled:bg-white"
         disabled={currentPage === 1}
       >
         &#10094;
@@ -56,7 +56,7 @@ const Pagination = ({
       <button
         type="button"
         onClick={handleOnNext}
-        className="border border-solid border-slate-300 px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 disabled:bg-slate-100"
+        className="border border-solid border-slate-300 px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 disabled:bg-white"
         disabled={lastPage === currentPage}
       >
         &#10095;
