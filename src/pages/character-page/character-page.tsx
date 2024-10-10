@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Loader from "@/components/loader/loader";
+import { useRouter } from "next/navigation";
 
 const CharacterPage = ({ id }: { id: number }) => {
+  const router = useRouter();
   const [detailCharacter, setDetailCharacter] = useState(
     [] as unknown as DetailCharacterType
   );
@@ -45,8 +47,8 @@ const CharacterPage = ({ id }: { id: number }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <article>
-          <div className="flex gap-1 items-center mb-10">
+        <article className="border border-solid border-neutral-400 rounded-lg p-10">
+          <div className="flex gap-1 items-center mb-5">
             <h2>Имя персонажа:</h2>
             <p className="font-semibold text-lg">{detailCharacter.name}</p>
           </div>
@@ -57,7 +59,7 @@ const CharacterPage = ({ id }: { id: number }) => {
             width={500}
             height={500}
           />
-          <div className="flex gap-1 mt-10 items-center">
+          <div className="flex gap-1 mt-5 items-center">
             <h2 className="">Статус жизни: </h2>
             <p className="font-semibold text-lg">
               {detailCharacter.status === "Alive"
@@ -68,7 +70,7 @@ const CharacterPage = ({ id }: { id: number }) => {
             </p>
           </div>
 
-          <div className="flex gap-1 mt-10 items-center">
+          <div className="flex gap-1 mt-3 items-center">
             <h2 className="">Раса: </h2>
             <p className="font-semibold text-lg">
               {detailCharacter.species === "Human"
@@ -84,6 +86,13 @@ const CharacterPage = ({ id }: { id: number }) => {
           </div>
         </article>
       )}
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="border border-solid border-slate-300 px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 w-24"
+      >
+        Назад
+      </button>
     </section>
   );
 };

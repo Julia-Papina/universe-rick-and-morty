@@ -13,5 +13,6 @@ export type CharacterType = {
     results: {
       id: number;
       name: string;
+      image: string;
     }[];
   };
