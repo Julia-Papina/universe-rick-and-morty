@@ -99,7 +99,7 @@ export const HomePage = () => {
   };
   //console.log(character);
   return (
-    <main className="flex flex-col items-center my-20">
+    <main className="flex flex-col items-center my-20 mx-5">
       <form className="flex flex-col justify-center gap-5 p-10 border border-solid border-black rounded-lg bg-white min-w-full">
         <h1 className="font-semibold text-lg">Вселенная Рик и Морти</h1>
         <fieldset className="flex flex-col justify-center gap-1">

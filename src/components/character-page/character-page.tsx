@@ -56,8 +56,8 @@ const CharacterPage = ({ id }: { id: number }) => {
           <Image
             src={detailCharacter?.image}
             alt="изображение персонажа"
-            width={500}
-            height={500}
+            width={400}
+            height={400}
           />
           <div className="flex gap-1 mt-5 items-center">
             <h2 className="">Статус жизни: </h2>

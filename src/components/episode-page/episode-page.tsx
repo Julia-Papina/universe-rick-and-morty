@@ -34,7 +34,7 @@ const EpisodePage = ({ id }: { id: number }) => {
   console.log(detailEpisode);
 
   return (
-    <section className="flex flex-col gap-5 mt-20 mb-20" id="episode-detail">
+    <section className="flex flex-col gap-5 mt-20 mb-20 mx-5" id="episode-detail">
       <h1 className="font-semibold text-2xl text-amber-950">
         Вселенная Рик и Морти
       </h1>
