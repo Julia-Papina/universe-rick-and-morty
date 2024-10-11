@@ -1,6 +1,6 @@
 ## Вселенная Рик и Морти
 
-# Деплой проекта: https://universe-rick-and-morty-taupe.vercel.app/
+## Деплой проекта: https://universe-rick-and-morty-taupe.vercel.app/
 
 ### Стек: 
 * Next.js, TypeScript, Tailwind css
